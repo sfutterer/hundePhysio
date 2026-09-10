@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>HundePhysio</title>
+  <meta name="description" content="Einfache App für die Physiotherapie mit Hund.">
+  <meta name="theme-color" content="#0E9488">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="HundePhysio">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <img class="logo" src="icons/icon.svg" width="44" height="44" alt="">
+    <div>
+      <h1>HundePhysio</h1>
+      <p class="tagline">Physiotherapie für den Hund</p>
+    </div>
+    <span id="netz" class="badge" hidden>offline</span>
+  </header>
+
+  <main>
+    <section class="card hero">
+      <h2>Hallo&nbsp;Welt! 🐶</h2>
+      <p>
+        Die App läuft. Mehr kann sie noch nicht &ndash; das ist die erste
+        Dummy-Version, damit Gerüst, Icon und Installation stehen.
+      </p>
+      <p class="hint" id="besuch"></p>
+    </section>
+
+    <section class="card">
+      <h3>Status</h3>
+      <dl class="status">
+        <dt>Version</dt><dd id="version">&hellip;</dd>
+        <dt>Offline&#8209;Modus</dt><dd id="sw-status">wird geprüft&hellip;</dd>
+        <dt>Installation</dt><dd id="install-status">im Browser geöffnet</dd>
+      </dl>
+      <button id="install" class="btn" hidden>Auf dem Gerät installieren</button>
+    </section>
+
+    <section class="card next">
+      <h3>Als Nächstes geplant</h3>
+      <ul>
+        <li>Hundeprofil anlegen</li>
+        <li>Übungen mit Anleitung</li>
+        <li>Trainingstagebuch</li>
+      </ul>
+      <p class="hint">Daten bleiben lokal auf dem Gerät (localStorage).</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Kein Ersatz für tierärztliche Beratung.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

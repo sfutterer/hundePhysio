@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Glücklicher Hund">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2ED3B7"/>
+      <stop offset="1" stop-color="#0E9488"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <g>
+    <ellipse cx="104" cy="288" rx="52" ry="132" fill="#C97F33" transform="rotate(-22 104 288)"/>
+    <ellipse cx="408" cy="288" rx="52" ry="132" fill="#C97F33" transform="rotate(22 408 288)"/>
+    <ellipse cx="256" cy="270" rx="162" ry="152" fill="#F0B267"/>
+    <ellipse cx="136" cy="322" rx="30" ry="18" fill="#F76C8B" opacity=".35"/>
+    <ellipse cx="376" cy="322" rx="30" ry="18" fill="#F76C8B" opacity=".35"/>
+    <ellipse cx="256" cy="344" rx="100" ry="76" fill="#FFF6E8"/>
+    <path d="M256 330 V364" stroke="#3B2B25" stroke-width="12" stroke-linecap="round"/>
+    <ellipse cx="256" cy="312" rx="33" ry="25" fill="#3B2B25"/>
+    <ellipse cx="200" cy="248" rx="23" ry="25" fill="#3B2B25"/>
+    <ellipse cx="312" cy="248" rx="23" ry="25" fill="#3B2B25"/>
+    <circle cx="209" cy="240" r="8" fill="#fff"/>
+    <circle cx="321" cy="240" r="8" fill="#fff"/>
+    <ellipse cx="256" cy="392" rx="30" ry="28" fill="#F76C8B"/>
+    <path d="M212 336 Q256 388 300 336" stroke="#3B2B25" stroke-width="13" stroke-linecap="round" fill="none"/>
+  </g>
+</svg>
