@@ -75,6 +75,15 @@ const roundedRect = (x0, y0, x1, y1, r) => (x, y) => {
   return qx * qx + qy * qy <= r * r;
 };
 
+const polygon = (pts) => (x, y) => {
+  let inside = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const [xi, yi] = pts[i], [xj, yj] = pts[j];
+    if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+};
+
 const polylineStroke = (pts, w) => {
   const h = w / 2;
   return (x, y) => {
@@ -99,8 +108,15 @@ const quad = (p0, c, p1, steps = 48) =>
 
 /* -------------------------------------------------------------- Palette --- */
 
-const FUR = '#F0B267', EAR = '#C97F33', MUZZLE = '#FFF6E8';
-const DARK = '#3B2B25', TONGUE = '#F76C8B', BG_TOP = '#2ED3B7', BG_BOTTOM = '#0E9488';
+const FUR = '#9A8F80';        // graubraunes Stockhaar
+const FUR_DARK = '#7E7466';   // Ohren, Schattierung
+const FUR_DEEP = '#5C5348';   // Ohrinnenseite
+const STRIPE = '#6F6557';     // Stromung (Brindle)
+const LIGHT = '#C6BCAB';      // helle Abzeichen
+const MUZZLE = '#DCD4C4';     // helle Schnauze
+const EYE = '#C4802F';        // Bernstein
+const DARK = '#2B2622';       // Nase, Pupille, Fang
+const BG_TOP = '#2ED3B7', BG_BOTTOM = '#0E9488';
 
 // Hintergrund: vertikaler Verlauf. `full` = randlos (maskable), sonst abgerundet.
 const background = (full) => ({
@@ -111,22 +127,43 @@ const background = (full) => ({
   },
 });
 
-// Der Hund - von hinten nach vorne gezeichnet.
+// Der Hund - von hinten nach vorne gezeichnet. Vorlage: Stehohren,
+// lange schmale Schnauze, graubraun gestromt, bernsteinfarbene Augen.
 const DOG = [
-  { hit: ellipse(104, 288, 52, 132, -22), fill: EAR },
-  { hit: ellipse(408, 288, 52, 132, 22), fill: EAR },
-  { hit: ellipse(256, 270, 162, 152), fill: FUR },
-  { hit: ellipse(136, 322, 30, 18), fill: TONGUE, alpha: 0.35 },
-  { hit: ellipse(376, 322, 30, 18), fill: TONGUE, alpha: 0.35 },
-  { hit: ellipse(256, 344, 100, 76), fill: MUZZLE },
-  { hit: polylineStroke([[256, 330], [256, 364]], 12), fill: DARK },
-  { hit: ellipse(256, 312, 33, 25), fill: DARK },
-  { hit: ellipse(200, 248, 23, 25), fill: DARK },
-  { hit: ellipse(312, 248, 23, 25), fill: DARK },
-  { hit: ellipse(209, 240, 8, 8), fill: '#FFFFFF' },
-  { hit: ellipse(321, 240, 8, 8), fill: '#FFFFFF' },
-  { hit: ellipse(256, 392, 30, 28), fill: TONGUE },
-  { hit: polylineStroke(quad([212, 336], [256, 388], [300, 336]), 13), fill: DARK },
+  // Ohren
+  { hit: polygon([[150, 216], [254, 150], [112, 58]]), fill: FUR_DARK },
+  { hit: polygon([[362, 216], [258, 150], [400, 58]]), fill: FUR_DARK },
+  { hit: polygon([[168, 202], [242, 172], [130, 96]]), fill: FUR_DEEP },
+  { hit: polygon([[344, 202], [270, 172], [382, 96]]), fill: FUR_DEEP },
+
+  // Kopf: Schaedel + Nasenruecken verschmelzen zur langen Schnauze
+  { hit: ellipse(256, 264, 126, 112), fill: FUR },
+  { hit: ellipse(256, 336, 72, 108), fill: FUR },
+
+  // Stromung
+  { hit: polylineStroke([[186, 176], [198, 236]], 16), fill: STRIPE },
+  { hit: polylineStroke([[228, 158], [236, 214]], 14), fill: STRIPE },
+  { hit: polylineStroke([[326, 176], [314, 236]], 16), fill: STRIPE },
+  { hit: polylineStroke([[284, 158], [276, 214]], 14), fill: STRIPE },
+
+  // Helle Abzeichen: Nasenruecken und Wangen
+  { hit: ellipse(256, 340, 26, 98), fill: LIGHT },
+  { hit: ellipse(256, 386, 64, 66), fill: MUZZLE },
+
+  // Augen
+  { hit: ellipse(196, 268, 30, 23, -12), fill: DARK },
+  { hit: ellipse(316, 268, 30, 23, 12), fill: DARK },
+  { hit: ellipse(196, 268, 24, 18, -12), fill: EYE },
+  { hit: ellipse(316, 268, 24, 18, 12), fill: EYE },
+  { hit: ellipse(198, 269, 11, 13), fill: DARK },
+  { hit: ellipse(314, 269, 11, 13), fill: DARK },
+  { hit: ellipse(190, 261, 7, 7), fill: '#FFFFFF' },
+  { hit: ellipse(306, 261, 7, 7), fill: '#FFFFFF' },
+
+  // Nase und Fang
+  { hit: ellipse(256, 396, 33, 25), fill: DARK },
+  { hit: polylineStroke([[256, 416], [256, 428]], 11), fill: DARK },
+  { hit: polylineStroke(quad([218, 426], [256, 452], [294, 426]), 12), fill: DARK },
 ];
 
 /* ------------------------------------------------------------ Rendering --- */
@@ -134,7 +171,7 @@ const DOG = [
 function render(size, { maskable = false } = {}) {
   const SS = 4; // 4x4 Supersampling fuer weiche Kanten
   const scale = D / size;
-  const shrink = maskable ? 0.76 : 1; // Safe-Zone fuer maskable Icons
+  const shrink = maskable ? 0.72 : 0.94; // Safe-Zone fuer maskable Icons
   const shapes = [background(maskable), ...DOG.map((s) => ({ ...s, dog: true }))];
   const out = new Uint8Array(size * size * 4);
 

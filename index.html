@@ -2,64 +2,138 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <title>HundePhysio</title>
-  <meta name="description" content="Einfache App für die Physiotherapie mit Hund.">
-  <meta name="theme-color" content="#0E9488">
+  <meta name="description" content="Tägliche Physio-Übungen für den Hund abhaken und im Monatsüberblick verfolgen.">
+  <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="icon" href="icons/favicon-32.png" sizes="32x32">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="HundePhysio">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="topbar">
-    <img class="logo" src="icons/icon.svg" width="44" height="44" alt="">
-    <div>
-      <h1>HundePhysio</h1>
-      <p class="tagline">Physiotherapie für den Hund</p>
-    </div>
-    <span id="netz" class="badge" hidden>offline</span>
+
+<!-- ------------------------------------------------------------- Heute --- -->
+<section class="screen" id="screen-heute" aria-label="Heute">
+  <header class="navbar">
+    <span class="navbar-title">Heute</span>
   </header>
+  <div class="scroll" id="scroll-heute">
+    <div class="title-block">
+      <h1 class="large-title">Heute</h1>
+      <p class="title-sub" id="heute-datum"></p>
+    </div>
 
-  <main>
-    <section class="card hero">
-      <h2>Hallo&nbsp;Welt! 🐶</h2>
-      <p>
-        Die App läuft. Mehr kann sie noch nicht &ndash; das ist die erste
-        Dummy-Version, damit Gerüst, Icon und Installation stehen.
-      </p>
-      <p class="hint" id="besuch"></p>
-    </section>
+    <div class="card summary" id="heute-summary">
+      <svg class="ring" viewBox="0 0 40 40" aria-hidden="true">
+        <circle class="ring-bg" cx="20" cy="20" r="16"></circle>
+        <circle class="ring-fg" cx="20" cy="20" r="16"></circle>
+      </svg>
+      <div class="summary-text">
+        <strong id="heute-stand">0 von 7</strong>
+        <span id="heute-hinweis">Übungen erledigt</span>
+      </div>
+      <div class="summary-streak" id="heute-serie"></div>
+    </div>
 
-    <section class="card">
-      <h3>Status</h3>
-      <dl class="status">
-        <dt>Version</dt><dd id="version">&hellip;</dd>
-        <dt>Offline&#8209;Modus</dt><dd id="sw-status">wird geprüft&hellip;</dd>
-        <dt>Installation</dt><dd id="install-status">im Browser geöffnet</dd>
-      </dl>
-      <button id="install" class="btn" hidden>Auf dem Gerät installieren</button>
-    </section>
+    <ul class="list" id="liste-heute"></ul>
 
-    <section class="card next">
-      <h3>Als Nächstes geplant</h3>
-      <ul>
-        <li>Hundeprofil anlegen</li>
-        <li>Übungen mit Anleitung</li>
-        <li>Trainingstagebuch</li>
-      </ul>
-      <p class="hint">Daten bleiben lokal auf dem Gerät (localStorage).</p>
-    </section>
-  </main>
+    <p class="footnote">
+      Übungen nach den Handzetteln des AniCura Kleintierzentrums Weingarten,
+      ergänzt um recherchierte Hinweise. Kein Ersatz für tierärztliche Beratung –
+      im Zweifel in der Praxis nachfragen.
+    </p>
+  </div>
+</section>
 
-  <footer>
-    <p>Kein Ersatz für tierärztliche Beratung.</p>
-  </footer>
+<!-- ---------------------------------------------------------- Kalender --- -->
+<section class="screen" id="screen-kalender" aria-label="Kalender" hidden>
+  <header class="navbar">
+    <span class="navbar-title">Kalender</span>
+  </header>
+  <div class="scroll" id="scroll-kalender">
+    <div class="title-block">
+      <h1 class="large-title">Kalender</h1>
+      <p class="title-sub">Monatsübersicht</p>
+    </div>
 
-  <script src="app.js"></script>
+    <div class="card calendar">
+      <div class="cal-head">
+        <button class="cal-nav" id="cal-zurueck" aria-label="Vorheriger Monat">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 7 12l8 8"/></svg>
+        </button>
+        <span class="cal-monat" id="cal-monat"></span>
+        <button class="cal-nav" id="cal-vor" aria-label="Nächster Monat">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8"/></svg>
+        </button>
+      </div>
+      <div class="cal-wochentage" aria-hidden="true">
+        <span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+
+    <h2 class="section-header">Monatsbilanz</h2>
+    <ul class="list" id="monats-statistik"></ul>
+
+    <h2 class="section-header">Übungen im Monat</h2>
+    <ul class="list" id="monats-uebungen"></ul>
+
+    <p class="footnote">
+      Ein Tag gilt als vollständig, wenn alle sieben Übungen abgehakt sind.
+      Vergangene Tage lassen sich nachtragen – tippe dafür auf einen Tag.
+    </p>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------ Detail --- -->
+<section class="screen detail" id="screen-detail" aria-label="Übung" hidden>
+  <header class="navbar">
+    <button class="navbar-back" id="detail-zurueck">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 7 12l8 8"/></svg>
+      <span id="detail-zurueck-label">Heute</span>
+    </button>
+    <span class="navbar-title" id="detail-navtitel"></span>
+  </header>
+  <div class="scroll" id="scroll-detail"></div>
+</section>
+
+<!-- -------------------------------------------------------------- Tabs --- -->
+<nav class="tabbar" id="tabbar">
+  <button class="tab is-active" data-tab="heute" aria-current="page">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M9 11.5l2.2 2.2L15.5 9.4"/>
+      <circle cx="12" cy="12" r="8.4"/>
+    </svg>
+    <span>Heute</span>
+  </button>
+  <button class="tab" data-tab="kalender">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3.6" y="5.2" width="16.8" height="15.2" rx="3"/>
+      <path d="M3.6 10h16.8M8 3.4v3.4M16 3.4v3.4"/>
+    </svg>
+    <span>Kalender</span>
+  </button>
+</nav>
+
+<!-- ------------------------------------------------------------- Sheet --- -->
+<div class="sheet-backdrop" id="sheet-backdrop" hidden></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Tagesdetails" hidden>
+  <div class="sheet-grip" aria-hidden="true"></div>
+  <div class="sheet-head">
+    <strong id="sheet-titel"></strong>
+    <button class="sheet-close" id="sheet-close">Fertig</button>
+  </div>
+  <div class="sheet-body" id="sheet-body"></div>
+</div>
+
+<script src="exercises.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

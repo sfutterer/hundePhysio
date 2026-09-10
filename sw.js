@@ -1,5 +1,5 @@
 /* Service Worker: macht die App offline nutzbar. */
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE = `hundephysio-${VERSION}`;
 
 // Alle Pfade relativ zum Scope - so funktioniert es sowohl unter
@@ -9,6 +9,7 @@ const APP_SHELL = [
   './index.html',
   './styles.css',
   './app.js',
+  './exercises.js',
   './manifest.webmanifest',
   './icons/icon.svg',
   './icons/icon-192.png',
