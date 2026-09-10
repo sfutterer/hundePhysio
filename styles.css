@@ -89,7 +89,6 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   transition: transform .38s var(--ease);
 }
 .screen.detail.is-open { transform: translateX(0); }
-.screen.detail .scroll { padding-bottom: calc(env(safe-area-inset-bottom) + 32px); }
 
 /* ------------------------------------------------------------- Navbar ---- */
 
