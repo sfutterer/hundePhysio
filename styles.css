@@ -17,6 +17,7 @@
   --fill-strong: rgba(120, 120, 128, .2);
   --tint: #0E9488;
   --tint-soft: rgba(14, 148, 136, .12);
+  --auf-tint: #FFFFFF;
   --rot: #FF3B30;
   --bar: rgba(249, 249, 249, .82);
 
@@ -38,6 +39,8 @@
     --fill-strong: rgba(120, 120, 128, .36);
     --tint: #2FD3B7;
     --tint-soft: rgba(47, 211, 183, .16);
+    --auf-tint: #05221E;
+    --rot: #FF453A;
     --bar: rgba(28, 28, 30, .78);
   }
 }
@@ -256,7 +259,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   top: 5.5px;
   width: 8px;
   height: 13px;
-  border: solid #fff;
+  border: solid var(--auf-tint);
   border-width: 0 2.4px 2.4px 0;
   transform: rotate(45deg) scale(.4);
   opacity: 0;
@@ -332,7 +335,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .cal-tag.zukunft { color: var(--label-3); }
 .cal-tag.heute .cal-num {
   background: var(--tint);
-  color: #fff;
+  color: var(--auf-tint);
   border-radius: 50%;
   width: 26px;
   height: 26px;
@@ -404,7 +407,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   padding: 15px;
   border-radius: 14px;
   background: var(--tint);
-  color: #fff;
+  color: var(--auf-tint);
   font-size: 17px;
   font-weight: 600;
   letter-spacing: -.4px;
@@ -557,6 +560,40 @@ code {
 }
 .sheet-body .list { margin-top: 12px; }
 .sheet-hinweis { margin: 12px var(--inset) 0; font-size: 13px; color: var(--label-2); }
+
+/* ------------------------------------------- Weitere Systemvorgaben --- */
+
+/* „Transparenz reduzieren": Leisten ohne Weichzeichner, dafuer deckend. */
+@media (prefers-reduced-transparency: reduce) {
+  :root { --bar: #F2F2F7; }
+  .navbar, .tabbar {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+@media (prefers-reduced-transparency: reduce) and (prefers-color-scheme: dark) {
+  :root { --bar: #1C1C1E; }
+}
+
+/* „Kontrast erhoehen": kraeftigere Trennlinien, dunklere Sekundaertexte. */
+@media (prefers-contrast: more) {
+  :root {
+    --label-2: rgba(60, 60, 67, .85);
+    --label-3: rgba(60, 60, 67, .6);
+    --separator: rgba(60, 60, 67, .55);
+    --tint: #0A6F66;
+  }
+  .check i { border-width: 2.4px; }
+  .card, .list, .block, .faq, .video { outline: .5px solid var(--separator); outline-offset: -.5px; }
+}
+@media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+  :root {
+    --label-2: rgba(235, 235, 245, .85);
+    --label-3: rgba(235, 235, 245, .6);
+    --separator: rgba(150, 150, 158, .8);
+    --tint: #5FE6CE;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   * { transition-duration: .01ms !important; }

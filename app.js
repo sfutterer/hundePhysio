@@ -2,7 +2,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = 'v3';
+  const APP_VERSION = 'v4';
   const KEY = 'hundephysio.log.v1';
 
   const $ = (sel) => document.querySelector(sel);

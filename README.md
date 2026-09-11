@@ -21,6 +21,10 @@ Eine kleine PWA für die täglichen Physiotherapie-Übungen mit dem Hund:
 - Installierbar und offlinefähig (Service Worker), Oberfläche an den iOS Human
   Interface Guidelines orientiert (System-Schrift, Large Titles,
   Inset-Grouped-Listen, Tab-Bar mit Blur, Safe-Area-Ränder)
+- **Erscheinungsbild folgt dem System**: hell und dunkel über
+  `prefers-color-scheme`, dazu `prefers-contrast`,
+  `prefers-reduced-transparency` und `prefers-reduced-motion`. Kein eigener
+  Schalter – die App übernimmt, was im Gerät eingestellt ist
 
 ## Inhalte der Übungen
 
