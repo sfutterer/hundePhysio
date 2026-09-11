@@ -2,7 +2,7 @@
 (() => {
   'use strict';
 
-  const APP_VERSION = 'v2';
+  const APP_VERSION = 'v3';
   const KEY = 'hundephysio.log.v1';
 
   const $ = (sel) => document.querySelector(sel);
@@ -389,6 +389,7 @@
     state.tab = name;
     el('screen-heute').hidden = name !== 'heute';
     el('screen-kalender').hidden = name !== 'kalender';
+    el('screen-hilfe').hidden = name !== 'hilfe';
     document.querySelectorAll('.tab').forEach((t) => {
       const aktiv = t.dataset.tab === name;
       t.classList.toggle('is-active', aktiv);
@@ -419,7 +420,7 @@
   });
 
   // Navigationsleiste erst einblenden, wenn der Large Title weggescrollt ist.
-  for (const id of ['heute', 'kalender']) {
+  for (const id of ['heute', 'kalender', 'hilfe']) {
     const bereich = el(`scroll-${id}`);
     bereich.addEventListener(
       'scroll',
@@ -433,6 +434,44 @@
   // Datumswechsel über Mitternacht: beim Zurückkehren neu laden.
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && iso(new Date()) !== HEUTE) location.reload();
+  });
+
+  /* ------------------------------------------------------------- Hilfe --- */
+
+  const installiert = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+
+  function zeigeLage() {
+    if (installiert()) {
+      el('install-lage').textContent = 'Läuft als installierte App';
+      el('install-lage-sub').textContent = 'Die Haken werden hier auf dem Gerät gespeichert.';
+    } else {
+      el('install-lage').textContent = 'Läuft im Browser';
+      el('install-lage-sub').textContent = 'Für den Home-Bildschirm der Anleitung unten folgen.';
+    }
+  }
+  zeigeLage();
+  el('app-version').textContent = APP_VERSION;
+
+  // Chrome und Edge bieten die Installation selbst an; iOS tut das nicht.
+  let installEreignis = null;
+  addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    installEreignis = e;
+    el('install-knopf').hidden = false;
+  });
+
+  el('install-knopf').addEventListener('click', async () => {
+    if (!installEreignis) return;
+    el('install-knopf').disabled = true;
+    await installEreignis.prompt();
+    await installEreignis.userChoice;
+    installEreignis = null;
+    el('install-knopf').hidden = true;
+  });
+
+  addEventListener('appinstalled', () => {
+    el('install-knopf').hidden = true;
+    zeigeLage();
   });
 
   /* ----------------------------------------------------- Service Worker --- */

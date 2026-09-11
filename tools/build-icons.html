@@ -1,0 +1,68 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Icons bauen</title>
+<style>
+  body { font: 15px system-ui, sans-serif; margin: 24px; background: #fff; color: #111; }
+  canvas { border: 1px solid #ddd; margin: 8px 8px 0 0; vertical-align: top; }
+  #log { white-space: pre-wrap; margin-top: 16px; color: #444; }
+</style>
+<h1>HundePhysio · Icons</h1>
+<div id="vorschau"></div>
+<p id="log">…</p>
+
+<script>
+// Quadratischer Ausschnitt aus der Illustration (Originalmaß 1024 x 1536).
+const AUSSCHNITT = { x: 25, y: 130, seite: 940 };
+
+const JOBS = [
+  { name: 'icon-512.png', groesse: 512, rund: true },
+  { name: 'icon-192.png', groesse: 192, rund: true },
+  { name: 'icon-maskable-512.png', groesse: 512, anteil: 0.8 }, // Safe-Zone
+  { name: 'apple-touch-icon.png', groesse: 180 },               // iOS rundet selbst
+  { name: 'favicon-32.png', groesse: 32, rund: true },
+];
+
+const log = (text) => { document.getElementById('log').textContent += '\n' + text; };
+
+function zeichne(bild, { groesse, rund = false, anteil = 1 }) {
+  const c = document.createElement('canvas');
+  c.width = c.height = groesse;
+  const g = c.getContext('2d');
+  g.imageSmoothingEnabled = true;
+  g.imageSmoothingQuality = 'high';
+
+  g.fillStyle = '#FFFFFF';
+  g.fillRect(0, 0, groesse, groesse);
+
+  if (rund) {
+    const r = groesse * 0.22;
+    g.beginPath();
+    g.roundRect(0, 0, groesse, groesse, r);
+    g.clip();
+    g.fillStyle = '#FFFFFF';
+    g.fillRect(0, 0, groesse, groesse);
+  }
+
+  const ziel = groesse * anteil;
+  const rand = (groesse - ziel) / 2;
+  g.drawImage(bild, AUSSCHNITT.x, AUSSCHNITT.y, AUSSCHNITT.seite, AUSSCHNITT.seite, rand, rand, ziel, ziel);
+  return c;
+}
+
+(async () => {
+  const bild = new Image();
+  bild.src = '/source.jpg';
+  await bild.decode();
+  log(`Quelle: ${bild.naturalWidth} x ${bild.naturalHeight}`);
+  log(`Ausschnitt: x ${AUSSCHNITT.x}, y ${AUSSCHNITT.y}, Seite ${AUSSCHNITT.seite}`);
+
+  for (const job of JOBS) {
+    const c = zeichne(bild, job);
+    if (job.groesse >= 180) document.getElementById('vorschau').appendChild(c);
+    const blob = await new Promise((r) => c.toBlob(r, 'image/png'));
+    await fetch('/save?name=' + job.name, { method: 'POST', body: blob });
+    log(`gesendet: ${job.name} (${job.groesse}px, ${Math.round(blob.size / 1024)} kB)`);
+  }
+  log('fertig – der Server beendet sich selbst.');
+})().catch((e) => log('Fehler: ' + e.message));
+</script>

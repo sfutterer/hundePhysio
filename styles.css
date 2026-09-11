@@ -413,6 +413,77 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .action:active { opacity: .8; }
 .action.is-done { background: var(--fill); color: var(--label); }
 
+/* -------------------------------------------------------------- Hilfe --- */
+
+.status-icon { border-radius: 10px; flex: none; }
+
+.hilfe-text {
+  margin: 8px var(--inset) 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--label-2);
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+  color: var(--label);
+  background: var(--fill);
+  padding: 3px 7px;
+  border-radius: 6px;
+}
+
+.faq {
+  margin: 8px var(--inset) 0;
+  background: var(--bg-elevated);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.faq details + details { border-top: .5px solid var(--separator); }
+
+.faq summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 50px;
+  padding: 12px 16px;
+  font-size: 17px;
+  letter-spacing: -.4px;
+  cursor: pointer;
+  list-style: none;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  margin-left: auto;
+  border-right: 2px solid var(--label-3);
+  border-bottom: 2px solid var(--label-3);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform .2s ease;
+}
+.faq details[open] summary::after { transform: rotate(225deg) translate(-2px, -2px); }
+.faq summary:active { background: var(--fill); }
+
+.faq summary em {
+  font-style: normal;
+  font-size: 12px;
+  color: var(--tint);
+  background: var(--tint-soft);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.faq ol { margin: 0; padding: 0 16px 14px 38px; }
+.faq ol li { font-size: 15px; line-height: 1.45; margin-bottom: 9px; }
+.faq ol li:last-child { margin-bottom: 0; }
+
+.list li.info { display: block; padding: 11px 16px; }
+.list li.info b { display: block; font-size: 15px; font-weight: 600; letter-spacing: -.2px; }
+.list li.info span { display: block; margin-top: 2px; font-size: 14px; line-height: 1.4; color: var(--label-2); text-align: left; }
+.list li.info + li.info::before { left: 16px; }
+
 /* ------------------------------------------------------------- Tabbar ---- */
 
 .tabbar {

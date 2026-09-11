@@ -14,6 +14,8 @@ Eine kleine PWA für die täglichen Physiotherapie-Übungen mit dem Hund:
   (grau = teilweise, farbig = vollständig), Monatsbilanz und Zähler je Übung
 - **Nachtragen** – Tippen auf einen vergangenen Tag öffnet ein Tagesblatt,
   in dem sich Haken nachträglich setzen lassen
+- **Hilfe** – bebilderte Anleitung, wie sich die App unter iOS aus Safari,
+  Chrome, Firefox oder Edge auf den Home-Bildschirm legen lässt
 - **Speicherung** ausschließlich lokal im `localStorage`; Haken bleiben nach dem
   Schließen der App erhalten. Kein Backend, kein Konto, keine Übertragung
 - Installierbar und offlinefähig (Service Worker), Oberfläche an den iOS Human
@@ -47,8 +49,8 @@ Die App ersetzt keine tierärztliche Beratung.
 | `exercises.js`             | Übungsdaten – hier werden Inhalte gepflegt                      |
 | `app.js`                   | Zustand, Speicherung, Rendering, Navigation                     |
 | `sw.js`                    | Service Worker (Offline-Cache), Version über `VERSION`          |
-| `icons/`                   | `icon.svg` ist die Quelle, die PNGs werden daraus erzeugt       |
-| `tools/generate-icons.mjs` | Erzeugt die PNG-Icons (nur Node-Bordmittel, kein ImageMagick)   |
+| `icons/`                   | App-Icons; Quelle ist `icons/source/hund-illustration.jpg`       |
+| `tools/build-icons.*`      | Schneidet und skaliert die Icons aus der Illustration           |
 | `.github/workflows/`       | Automatisches Deployment nach GitHub Pages                      |
 
 ## Übung ändern oder ergänzen
@@ -96,12 +98,16 @@ Danach die angezeigte `localhost`-Adresse öffnen.
 
 ## Icons neu erzeugen
 
-Nach Änderungen an `icons/icon.svg` die Formen in `tools/generate-icons.mjs`
-angleichen (gleiche Koordinaten, Designraum 512×512) und ausführen:
+Die Icons entstehen aus der Illustration in `icons/source/`. Node bringt keine
+Bildverarbeitung mit, deshalb übernimmt der Browser das Zuschneiden:
 
 ```bash
-node tools/generate-icons.mjs
+node tools/build-icons.mjs
 ```
+
+Danach http://localhost:4180 öffnen – die Seite schneidet zu, skaliert, schickt
+die PNGs an das Skript zurück und dieses beendet sich selbst. Den Bildausschnitt
+steuert die Konstante `AUSSCHNITT` in `tools/build-icons.html`.
 
 ## Veröffentlichen (GitHub Pages)
 
